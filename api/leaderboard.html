@@ -1,0 +1,1571 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Commit Your Speed</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #080c10;
+        --surface: #0d1117;
+        --surface2: #161b22;
+        --border: #21262d;
+        --border2: #30363d;
+        --green: #39d353;
+        --green-dim: #1a6628;
+        --blue: #79c0ff;
+        --orange: #f0883e;
+        --red: #ff7b72;
+        --muted: #8b949e;
+        --text: #e6edf3;
+        --text2: #c9d1d9;
+        --yellow: #e3b341;
+        --purple: #bc8cff;
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html,
+      body {
+        height: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        overflow: hidden;
+      }
+
+      /* SCANLINE overlay */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 0, 0, 0.03) 2px,
+          rgba(0, 0, 0, 0.03) 4px
+        );
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      /* SCREENS */
+      .screen {
+        display: none;
+        height: 100vh;
+        overflow: hidden;
+      }
+      .screen.active {
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ──────────────────────────────
+     SCREEN 0 — INTRO / SPLASH
+  ────────────────────────────── */
+      #s-intro {
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background: radial-gradient(
+          ellipse 80% 60% at 50% 50%,
+          #0d2518 0%,
+          var(--bg) 70%
+        );
+      }
+      .intro-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(57, 211, 83, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(57, 211, 83, 0.04) 1px, transparent 1px);
+        background-size: 40px 40px;
+        animation: gridMove 20s linear infinite;
+      }
+      @keyframes gridMove {
+        from {
+          background-position: 0 0;
+        }
+        to {
+          background-position: 40px 40px;
+        }
+      }
+      .intro-inner {
+        position: relative;
+        text-align: center;
+        z-index: 1;
+      }
+      .intro-badge {
+        display: inline-block;
+        font-size: 11px;
+        color: var(--green);
+        border: 1px solid var(--green-dim);
+        padding: 4px 12px;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        letter-spacing: 0.15em;
+        animation: pulse 2s ease-in-out infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+      .intro-title {
+        font-family: "Space Mono", monospace;
+        font-size: clamp(2.5rem, 6vw, 5rem);
+        font-weight: 700;
+        line-height: 1;
+        color: var(--text);
+        margin-bottom: 0.5rem;
+      }
+      .intro-title span {
+        color: var(--green);
+      }
+      .intro-sub {
+        font-size: 14px;
+        color: var(--muted);
+        margin-bottom: 3rem;
+        letter-spacing: 0.05em;
+      }
+      .intro-sub b {
+        color: var(--blue);
+        font-weight: 400;
+      }
+      .btn-start {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--green);
+        color: #000;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 15px;
+        font-weight: 700;
+        padding: 14px 36px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        letter-spacing: 0.05em;
+        transition:
+          transform 0.1s,
+          box-shadow 0.2s;
+        box-shadow: 0 0 30px rgba(57, 211, 83, 0.3);
+      }
+      .btn-start:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 50px rgba(57, 211, 83, 0.5);
+      }
+      .btn-start:active {
+        transform: scale(0.98);
+      }
+      .btn-board {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        color: var(--muted);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        font-weight: 400;
+        padding: 10px 24px;
+        border: 1px solid var(--border2);
+        border-radius: 4px;
+        cursor: pointer;
+        letter-spacing: 0.05em;
+        transition: all 0.2s;
+        margin-top: 1rem;
+      }
+      .btn-board:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+        box-shadow: 0 0 20px rgba(121, 192, 255, 0.15);
+      }
+      .intro-stats {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+        margin-top: 3rem;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .intro-stats span {
+        color: var(--text2);
+      }
+
+      /* ──────────────────────────────
+     SCREEN 1 — TYPING TERMINAL
+  ────────────────────────────── */
+      #s-game {
+        padding: 0;
+        background: var(--bg);
+      }
+      .term-window {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .term-titlebar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: var(--surface2);
+        border-bottom: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .tdot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .tdot.r {
+        background: #ff5f57;
+      }
+      .tdot.y {
+        background: #febc2e;
+      }
+      .tdot.g {
+        background: #28c840;
+      }
+      .term-name {
+        font-size: 12px;
+        color: var(--muted);
+        margin: 0 auto;
+        letter-spacing: 0.05em;
+      }
+      .term-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 1.5rem 2rem;
+        overflow: hidden;
+      }
+
+      .term-prompt {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 4px;
+      }
+      .term-prompt .p-user {
+        color: var(--green);
+      }
+      .term-prompt .p-dir {
+        color: var(--blue);
+      }
+
+      .category-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: var(--orange);
+        border: 1px solid rgba(240, 136, 62, 0.3);
+        padding: 3px 10px;
+        border-radius: 3px;
+        margin-bottom: 1rem;
+      }
+
+      .phrase-display {
+        font-size: clamp(14px, 2vw, 18px);
+        line-height: 2;
+        color: var(--surface2);
+        background: var(--surface2);
+        border: 1px solid var(--border2);
+        border-radius: 4px;
+        padding: 1.25rem 1.5rem;
+        margin-bottom: 1rem;
+        letter-spacing: 0.02em;
+        position: relative;
+        user-select: none;
+        flex-shrink: 0;
+      }
+      .phrase-display .char-correct {
+        color: var(--green);
+      }
+      .phrase-display .char-wrong {
+        color: var(--red);
+        background: rgba(255, 123, 114, 0.15);
+        border-radius: 2px;
+      }
+      .phrase-display .char-pending {
+        color: #3d444d;
+      }
+      .phrase-display .char-cursor {
+        border-left: 2px solid var(--green);
+        animation: blink 0.8s step-end infinite;
+        margin-left: -2px;
+      }
+      @keyframes blink {
+        50% {
+          border-color: transparent;
+        }
+      }
+
+      .source-tag {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 0.5rem;
+        font-style: italic;
+      }
+      .source-tag span {
+        color: var(--purple);
+      }
+
+      .type-input {
+        background: var(--bg);
+        border: 1px solid var(--border2);
+        border-radius: 4px;
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 15px;
+        padding: 12px 16px;
+        width: 100%;
+        outline: none;
+        caret-color: var(--green);
+        transition: border-color 0.2s;
+        margin-bottom: 1rem;
+        flex-shrink: 0;
+      }
+      .type-input:focus {
+        border-color: var(--green);
+        box-shadow: 0 0 0 3px rgba(57, 211, 83, 0.1);
+      }
+      .type-input.has-error {
+        border-color: var(--red);
+        box-shadow: 0 0 0 3px rgba(255, 123, 114, 0.1);
+      }
+
+      .progress-track {
+        height: 3px;
+        background: var(--surface2);
+        border-radius: 2px;
+        margin-bottom: 1.5rem;
+        flex-shrink: 0;
+      }
+      .progress-fill {
+        height: 3px;
+        background: var(--green);
+        border-radius: 2px;
+        transition: width 0.1s;
+        width: 0%;
+        box-shadow: 0 0 8px rgba(57, 211, 83, 0.5);
+      }
+
+      .stats-bar {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 1.5rem;
+        flex-shrink: 0;
+      }
+      .stat-card {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 12px;
+        text-align: center;
+      }
+      .stat-val {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--green);
+        line-height: 1;
+      }
+      .stat-val.blue {
+        color: var(--blue);
+      }
+      .stat-val.orange {
+        color: var(--orange);
+      }
+      .stat-val.red {
+        color: var(--red);
+      }
+      .stat-lbl {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 4px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .phrase-nav {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 1rem;
+        flex-shrink: 0;
+      }
+      .btn-skip {
+        background: transparent;
+        border: 1px solid var(--border2);
+        color: var(--muted);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        padding: 6px 14px;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .btn-skip:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+      .btn-commit {
+        background: var(--green);
+        color: #000;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+        transition: all 0.15s;
+        margin-left: auto;
+        opacity: 0.4;
+        pointer-events: none;
+      }
+      .btn-commit.ready {
+        opacity: 1;
+        pointer-events: all;
+        box-shadow: 0 0 20px rgba(57, 211, 83, 0.3);
+      }
+      .btn-commit.ready:hover {
+        box-shadow: 0 0 35px rgba(57, 211, 83, 0.5);
+      }
+
+      .phrase-counter {
+        font-size: 11px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .phrase-counter .cur {
+        color: var(--text);
+      }
+
+      /* ──────────────────────────────
+     SCREEN 2 — COMMIT
+  ────────────────────────────── */
+      #s-commit {
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: radial-gradient(
+          ellipse 60% 50% at 50% 50%,
+          #0a1a2e 0%,
+          var(--bg) 70%
+        );
+      }
+      .commit-card {
+        width: 100%;
+        max-width: 680px;
+        background: var(--surface);
+        border: 1px solid var(--border2);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .commit-titlebar {
+        background: var(--surface2);
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-bottom: 1px solid var(--border);
+      }
+      .commit-body {
+        padding: 2rem;
+      }
+      .commit-output {
+        margin-bottom: 1.5rem;
+      }
+      .co-line {
+        font-size: 13px;
+        line-height: 2;
+        color: var(--muted);
+      }
+      .co-line .g {
+        color: var(--green);
+      }
+      .co-line .b {
+        color: var(--blue);
+      }
+      .co-line .o {
+        color: var(--orange);
+      }
+      .co-line .w {
+        color: var(--text);
+      }
+      .co-line .p {
+        color: var(--purple);
+      }
+      .co-line .y {
+        color: var(--yellow);
+      }
+
+      .name-section {
+        margin-bottom: 1.5rem;
+      }
+      .name-label {
+        font-size: 11px;
+        color: var(--muted);
+        margin-bottom: 8px;
+        letter-spacing: 0.1em;
+      }
+      .name-input-wrap {
+        display: flex;
+        gap: 8px;
+      }
+      .name-input {
+        flex: 1;
+        background: var(--bg);
+        border: 1px solid var(--border2);
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        padding: 10px 14px;
+        border-radius: 4px;
+        outline: none;
+        transition: border-color 0.2s;
+      }
+      .name-input:focus {
+        border-color: var(--blue);
+      }
+      .btn-push {
+        background: #1f6feb;
+        color: #fff;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s;
+        white-space: nowrap;
+      }
+      .btn-push:hover {
+        background: #388bfd;
+        box-shadow: 0 0 20px rgba(56, 139, 253, 0.4);
+      }
+
+      .score-preview {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 1rem 1.25rem;
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .sp-item {
+        text-align: center;
+      }
+      .sp-val {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--green);
+      }
+      .sp-val.b {
+        color: var(--blue);
+      }
+      .sp-lbl {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 2px;
+        letter-spacing: 0.1em;
+      }
+
+      /* ──────────────────────────────
+     SCREEN 3 — LEADERBOARD
+  ────────────────────────────── */
+      #s-board {
+        padding: 2rem;
+        background: var(--bg);
+        overflow-y: auto;
+      }
+      .board-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+      }
+      .board-title {
+        font-family: "Space Mono", monospace;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .board-title span {
+        color: var(--green);
+      }
+      .board-meta {
+        font-size: 12px;
+        color: var(--muted);
+        text-align: right;
+        line-height: 1.8;
+      }
+
+      .lb-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .lb-table thead th {
+        font-size: 10px;
+        color: var(--muted);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        text-align: left;
+        padding: 8px 16px;
+        border-bottom: 1px solid var(--border2);
+        font-weight: 400;
+      }
+      .lb-table thead th.r {
+        text-align: right;
+      }
+      .lb-table tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s;
+        animation: rowIn 0.4s ease both;
+      }
+      @keyframes rowIn {
+        from {
+          opacity: 0;
+          transform: translateX(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .lb-table tbody tr:hover {
+        background: var(--surface2);
+      }
+      .lb-table tbody tr.me {
+        background: rgba(57, 211, 83, 0.05);
+        border-color: rgba(57, 211, 83, 0.2);
+      }
+      .lb-table tbody td {
+        padding: 14px 16px;
+        font-size: 14px;
+      }
+
+      .rank-cell {
+        font-size: 12px;
+        color: var(--muted);
+        width: 40px;
+      }
+      .rank-gold {
+        color: var(--yellow);
+        font-size: 16px;
+      }
+      .rank-silver {
+        color: #b0b0b0;
+        font-size: 16px;
+      }
+      .rank-bronze {
+        color: #cd7f32;
+        font-size: 16px;
+      }
+      .rank-me {
+        color: var(--green);
+        font-size: 14px;
+      }
+
+      .name-cell {
+        color: var(--text);
+      }
+      .handle {
+        color: var(--green);
+      }
+      .phrase-cell {
+        font-size: 11px;
+        color: var(--muted);
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .wpm-cell {
+        text-align: right;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--green);
+      }
+      .acc-cell {
+        text-align: right;
+        color: var(--blue);
+      }
+      .time-cell {
+        text-align: right;
+        color: var(--orange);
+      }
+      .sha-cell {
+        text-align: right;
+        font-size: 11px;
+        color: var(--muted);
+        font-family: "Space Mono", monospace;
+      }
+      .me-badge {
+        display: inline-block;
+        font-size: 9px;
+        background: rgba(57, 211, 83, 0.15);
+        color: var(--green);
+        border: 1px solid rgba(57, 211, 83, 0.3);
+        padding: 1px 6px;
+        border-radius: 10px;
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+      .new-badge {
+        display: inline-block;
+        font-size: 9px;
+        background: rgba(121, 192, 255, 0.15);
+        color: var(--blue);
+        border: 1px solid rgba(121, 192, 255, 0.3);
+        padding: 1px 6px;
+        border-radius: 10px;
+        margin-left: 6px;
+        vertical-align: middle;
+        animation: fadePulse 1.5s ease-in-out 3;
+      }
+      @keyframes fadePulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+      }
+
+      .btn-play-again {
+        margin-top: 2rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: transparent;
+        border: 1px solid var(--border2);
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-size: 13px;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .btn-play-again:hover {
+        border-color: var(--green);
+        color: var(--green);
+      }
+
+      /* TOAST */
+      .toast {
+        position: fixed;
+        bottom: 2rem;
+        left: 50%;
+        transform: translateX(-50%) translateY(80px);
+        background: var(--surface2);
+        border: 1px solid var(--green-dim);
+        border-radius: 4px;
+        padding: 10px 20px;
+        font-size: 13px;
+        color: var(--green);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+        white-space: nowrap;
+        box-shadow: 0 0 20px rgba(57, 211, 83, 0.2);
+      }
+      .toast.show {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      /* COMPLETED flash */
+      .flash-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(57, 211, 83, 0.1);
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s;
+        z-index: 9998;
+      }
+      .flash-overlay.flash {
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- FLASH -->
+    <div class="flash-overlay" id="flash"></div>
+    <div class="toast" id="toast"></div>
+
+    <!-- ══════════════════════════════════════
+     SCREEN 0 — INTRO
+══════════════════════════════════════ -->
+    <div class="screen active" id="s-intro">
+      <div class="intro-grid"></div>
+      <div class="intro-inner">
+        <div class="intro-badge">▸ Club Kokoa · Inducción de novatos</div>
+        <h1 class="intro-title">Commit Your<br /><span>Speed</span></h1>
+        <p class="intro-sub">
+          Escribe rápido. Haz tu primer <b>commit</b>. Entra al leaderboard.
+        </p>
+        <button class="btn-start" onclick="startGame()">
+          <span>▶</span> ./start_challenge.sh
+        </button>
+        <br />
+        <button
+          class="btn-board"
+          onclick="
+            showScreen('s-board');
+            refreshBoard();
+          "
+        >
+          <span>◈</span> ver leaderboard
+        </button>
+        <div class="intro-stats">
+          <div>Participantes: <span id="intro-count">0</span></div>
+          <div>Mejor WPM: <span id="intro-best">—</span></div>
+          <div>Frases disponibles: <span>20</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+     SCREEN 1 — TYPING GAME
+══════════════════════════════════════ -->
+    <div class="screen" id="s-game">
+      <div class="term-window">
+        <div class="term-titlebar">
+          <div class="tdot r"></div>
+          <div class="tdot y"></div>
+          <div class="tdot g"></div>
+          <div class="term-name">commit-your-speed — bash — 120×30</div>
+        </div>
+        <div class="term-body">
+          <div class="term-prompt" style="margin-bottom: 1rem">
+            <span class="p-user">novato@espol</span>:<span class="p-dir"
+              >~/club-software</span
+            >$ <span style="color: var(--text)">typing_challenge --start</span>
+          </div>
+
+          <div class="phrase-nav">
+            <div class="phrase-counter">
+              frase <span class="cur" id="phrase-num">1</span> / 20
+            </div>
+            <div class="category-tag" id="cat-tag">◈ open-source</div>
+            <button class="btn-skip" onclick="skipPhrase()">
+              ↻ siguiente frase
+            </button>
+            <button
+              class="btn-commit ready"
+              id="btn-commit"
+              onclick="goCommit()"
+            >
+              git commit →
+            </button>
+          </div>
+
+          <div class="phrase-display" id="phrase-display">
+            <!-- chars rendered by JS -->
+          </div>
+          <div class="source-tag">— <span id="phrase-source"></span></div>
+
+          <input
+            class="type-input"
+            id="type-input"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="Empieza a escribir..."
+            oninput="onType()"
+          />
+
+          <div class="progress-track">
+            <div class="progress-fill" id="progress"></div>
+          </div>
+
+          <div class="stats-bar">
+            <div class="stat-card">
+              <div class="stat-val" id="stat-wpm">—</div>
+              <div class="stat-lbl">WPM</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val blue" id="stat-acc">—</div>
+              <div class="stat-lbl">Precisión</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val orange" id="stat-time">0.0s</div>
+              <div class="stat-lbl">Tiempo</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-val red" id="stat-err">0</div>
+              <div class="stat-lbl">Errores</div>
+            </div>
+          </div>
+
+          <div class="term-prompt">
+            <span class="p-user">novato@espol</span>:<span class="p-dir"
+              >~/club-software</span
+            >$
+            <span
+              style="color: var(--muted); animation: blink 1s step-end infinite"
+              >█</span
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+     SCREEN 2 — COMMIT
+══════════════════════════════════════ -->
+    <div class="screen" id="s-commit">
+      <div class="commit-card">
+        <div class="commit-titlebar">
+          <div class="tdot r"></div>
+          <div class="tdot y"></div>
+          <div class="tdot g"></div>
+          <div class="term-name" style="margin: 0 auto">
+            club-software / leaderboard.git
+          </div>
+        </div>
+        <div class="commit-body">
+          <div class="commit-output" id="commit-output">
+            <!-- lines rendered by JS -->
+          </div>
+          <div class="name-section">
+            <div class="name-label">▸ INGRESA TU NOMBRE O HANDLE</div>
+            <div class="name-input-wrap">
+              <input
+                class="name-input"
+                id="name-input"
+                type="text"
+                placeholder="tu_nombre o @handle"
+                maxlength="30"
+              />
+              <button class="btn-push" onclick="doPush()">git push ↗</button>
+            </div>
+          </div>
+          <div class="score-preview">
+            <div class="sp-item">
+              <div class="sp-val" id="sp-wpm">—</div>
+              <div class="sp-lbl">WPM</div>
+            </div>
+            <div class="sp-item">
+              <div class="sp-val b" id="sp-acc">—</div>
+              <div class="sp-lbl">Precisión</div>
+            </div>
+            <div class="sp-item">
+              <div class="sp-val" style="color: var(--orange)" id="sp-time">
+                —
+              </div>
+              <div class="sp-lbl">Tiempo</div>
+            </div>
+            <div class="sp-item">
+              <div class="sp-val" style="color: var(--purple)" id="sp-phrase">
+                —
+              </div>
+              <div class="sp-lbl">Frase</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════
+     SCREEN 3 — LEADERBOARD
+══════════════════════════════════════ -->
+    <div class="screen" id="s-board">
+      <div class="board-header">
+        <div>
+          <div class="board-title"><span>$</span> git log --leaderboard</div>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 4px">
+            club-software / leaderboard · branch: main
+          </div>
+        </div>
+        <div
+          class="board-meta"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+          "
+        >
+          <div id="board-time">actualizado ahora</div>
+          <div>
+            <span id="board-count" style="color: var(--green)">0</span> commits
+            · <span id="board-branch" style="color: var(--blue)">main</span>
+          </div>
+          <button
+            onclick="refreshBoard()"
+            style="
+              background: transparent;
+              border: 1px solid var(--border2);
+              color: var(--muted);
+              font-family: var(--font-mono);
+              font-size: 11px;
+              padding: 3px 10px;
+              border-radius: 3px;
+              cursor: pointer;
+            "
+            onmouseover="
+              this.style.color = 'var(--green)';
+              this.style.borderColor = 'var(--green)';
+            "
+            onmouseout="
+              this.style.color = 'var(--muted)';
+              this.style.borderColor = 'var(--border2)';
+            "
+          >
+            ⟳ refresh
+          </button>
+        </div>
+      </div>
+      <table class="lb-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Contributor</th>
+            <th>Frase</th>
+            <th class="r">WPM</th>
+            <th class="r">Precisión</th>
+            <th class="r">Tiempo</th>
+            <th class="r">Commit SHA</th>
+          </tr>
+        </thead>
+        <tbody id="lb-body"></tbody>
+      </table>
+      <div
+        style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap"
+      >
+        <button class="btn-play-again" onclick="startGame()">
+          ▶ jugar de nuevo
+        </button>
+        <button
+          class="btn-play-again"
+          onclick="showScreen('s-intro')"
+          style="margin-left: auto"
+        >
+          ← inicio
+        </button>
+      </div>
+    </div>
+
+    <script>
+      const PHRASES = [
+        {
+          text: "Dobby no tiene amo, Dobby es un elfo libre, y Dobby ha venido a salvar a Harry Potter y sus amigos.",
+          source: "Dobby (Harry Potter)",
+          cat: "movies",
+        },
+        {
+          text: "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendición y mi maldición.",
+          source: "Peter Parker (Spider-Man)",
+          cat: "movies",
+        },
+        {
+          text: "Yo jamás me rindo, y jamás retrocedo a mi palabra. ¡Ese es mi camino ninja!",
+          source: "Naruto Uzumaki (Naruto)",
+          cat: "anime",
+        },
+        {
+          text: "En el mundo de los ninjas, aquellos que rompen las reglas son escoria, pero aquellos que abandonan a sus amigos son peor que la escoria.",
+          source: "Kakashi Hatake (Naruto)",
+          cat: "anime",
+        },
+        {
+          text: "¡Mi magia es no rendirme nunca! No importa cuántas veces caiga, siempre me levantaré.",
+          source: "Asta (Black Clover)",
+          cat: "anime",
+        },
+        {
+          text: "En este mundo, la magia lo es todo, pero yo voy a superar todos los límites con el poder de mis músculos y mi voluntad.",
+          source: "Asta (Black Clover)",
+          cat: "anime",
+        },
+        {
+          text: "Reachin' out on my way home, you can be so cold, I'll try again. You make me sad and second-guess myself, Midwest Indigo.",
+          source: "Twenty One Pilots (Midwest Indigo)",
+          cat: "music",
+        },
+        {
+          text: "I don't care what's in your hair, I just wanna know what's on your mind. I used to say I wanna die before I'm old, but because of you I might think twice.",
+          source: "Twenty One Pilots (WDBWOTV)",
+          cat: "music",
+        },
+      ];
+
+      // ── GitHub config (proxy via Vercel) ───────────────────
+      const GH_API = "/api/github";
+      // ───────────────────────────────────────────────────────
+      let currentPhraseIdx = 0;
+      let timerStart = null;
+      let timerInterval = null;
+      let running = false;
+      let completed = false;
+      let finalStats = {};
+      let leaderboard = [];
+      let myEntryIdx = -1;
+      let cumulativeErrors = 0;
+      let prevErrorPositions = new Set(); // posiciones que ya fueron contadas como error
+      let ghFileSHA = null;
+
+      function showScreen(id) {
+        document
+          .querySelectorAll(".screen")
+          .forEach((s) => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+      }
+
+      // ── GitHub API helpers ──────────────────────────────────
+      async function ghFetch(url, options = {}) {
+        return fetch(url, {
+          ...options,
+          headers: {
+            "Content-Type": "application/json",
+            ...(options.headers || {}),
+          },
+        });
+      }
+
+      async function loadLeaderboard() {
+        try {
+          const res = await ghFetch(
+            GH_API + `?ref=${GH_BRANCH}&t=${Date.now()}`,
+          );
+          if (!res.ok) throw new Error("No se pudo leer leaderboard.json");
+          const data = await res.json();
+          ghFileSHA = data.sha;
+          const content = JSON.parse(atob(data.content.replace(/\n/g, "")));
+          leaderboard = Array.isArray(content) ? content : [];
+        } catch (e) {
+          console.warn("loadLeaderboard error:", e);
+          leaderboard = [];
+        }
+        updateIntroStats();
+        return leaderboard;
+      }
+
+      async function pushToGitHub(entry, commitMsg) {
+        try {
+          const res = await ghFetch(
+            GH_API + `?ref=${GH_BRANCH}&t=${Date.now()}`,
+          );
+          if (res.ok) {
+            const data = await res.json();
+            ghFileSHA = data.sha;
+            const remote = JSON.parse(atob(data.content.replace(/\n/g, "")));
+            if (Array.isArray(remote)) leaderboard = remote;
+          }
+        } catch (e) {}
+
+        const clean = { ...entry };
+        delete clean.isNew;
+        delete clean.isMe;
+        leaderboard.push(clean);
+        leaderboard.sort((a, b) => b.wpm - a.wpm || b.acc - a.acc);
+
+        const newContent = btoa(
+          unescape(encodeURIComponent(JSON.stringify(leaderboard, null, 2))),
+        );
+
+        const putRes = await ghFetch(GH_API, {
+          method: "PUT",
+          body: JSON.stringify({
+            message: commitMsg,
+            content: newContent,
+            sha: ghFileSHA,
+            branch: GH_BRANCH,
+          }),
+        });
+
+        if (!putRes.ok) {
+          const err = await putRes.json();
+          throw new Error(err.message || "Error al hacer push");
+        }
+
+        const putData = await putRes.json();
+        return putData.commit.sha.substring(0, 7);
+      }
+      // ───────────────────────────────────────────────────────
+
+      function startGame() {
+        currentPhraseIdx = Math.floor(Math.random() * PHRASES.length);
+        resetTimer();
+        completed = false;
+        finalStats = {};
+        cumulativeErrors = 0;
+        prevErrorPositions = new Set();
+        renderPhrase();
+        document.getElementById("type-input").value = "";
+        document.getElementById("stat-wpm").textContent = "—";
+        document.getElementById("stat-acc").textContent = "—";
+        document.getElementById("stat-time").textContent = "0.0s";
+        document.getElementById("stat-err").textContent = "0";
+        document.getElementById("progress").style.width = "0%";
+        const btn = document.getElementById("btn-commit");
+        btn.textContent = "git commit →";
+        btn.style.animation = "";
+        btn.classList.add("ready");
+        document.getElementById("type-input").disabled = false;
+        showScreen("s-game");
+        setTimeout(() => document.getElementById("type-input").focus(), 100);
+        updateIntroStats();
+      }
+
+      function renderPhrase() {
+        const p = PHRASES[currentPhraseIdx];
+        document.getElementById("phrase-source").textContent = p.source;
+        document.getElementById("cat-tag").textContent = "◈ " + p.cat;
+        document.getElementById("phrase-num").textContent =
+          currentPhraseIdx + 1;
+        const typed = document.getElementById("type-input").value;
+        const chars = p.text.split("");
+        let html = "";
+        chars.forEach((ch, i) => {
+          let cls = "char-pending";
+          if (i < typed.length) {
+            cls = typed[i] === ch ? "char-correct" : "char-wrong";
+          } else if (i === typed.length) {
+            cls = "char-pending char-cursor";
+          }
+          const disp = ch === " " ? "&nbsp;" : ch;
+          html += `<span class="${cls}">${disp}</span>`;
+        });
+        if (typed.length >= chars.length) {
+          html += '<span class="char-cursor"></span>';
+        }
+        document.getElementById("phrase-display").innerHTML = html;
+      }
+
+      function skipPhrase() {
+        currentPhraseIdx = (currentPhraseIdx + 1) % PHRASES.length;
+        document.getElementById("type-input").value = "";
+        resetTimer();
+        completed = false;
+        cumulativeErrors = 0;
+        prevErrorPositions = new Set();
+        document.getElementById("stat-err").textContent = "0";
+        renderPhrase();
+        document.getElementById("type-input").focus();
+      }
+
+      function resetTimer() {
+        clearInterval(timerInterval);
+        timerStart = null;
+        running = false;
+        timerInterval = null;
+      }
+
+      function onType() {
+        const input = document.getElementById("type-input");
+        const typed = input.value;
+        const phrase = PHRASES[currentPhraseIdx].text;
+
+        if (!running && typed.length > 0) {
+          running = true;
+          timerStart = Date.now();
+          timerInterval = setInterval(updateTimer, 100);
+        }
+
+        // Detectar nuevos errores comparando con el estado anterior
+        // Recorremos posición por posición: si la posición actual tiene un error
+        // y antes no la habíamos marcado como errónea, contamos el error.
+        let currentErrors = 0;
+        let correct = 0;
+        for (let i = 0; i < typed.length; i++) {
+          if (i < phrase.length) {
+            if (typed[i] === phrase[i]) {
+              correct++;
+              // Si antes esta posición era un error, la limpiamos del set
+              prevErrorPositions.delete(i);
+            } else {
+              currentErrors++;
+              // Solo contamos error si esta posición no tenía ya un error registrado
+              if (!prevErrorPositions.has(i)) {
+                cumulativeErrors++;
+                prevErrorPositions.add(i);
+              }
+            }
+          }
+        }
+        // Si el usuario borró hasta quedar con menos caracteres, limpiar posiciones
+        // que ya no existen para que se puedan volver a contar si se reescriben mal
+        for (const pos of prevErrorPositions) {
+          if (pos >= typed.length) prevErrorPositions.delete(pos);
+        }
+
+        const acc =
+          typed.length > 0 ? Math.round((correct / typed.length) * 100) : 100;
+        input.classList.toggle(
+          "has-error",
+          currentErrors > 0 && typed.length > 0,
+        );
+
+        document.getElementById("stat-acc").textContent =
+          typed.length > 0 ? acc + "%" : "—";
+        document.getElementById("stat-err").textContent = cumulativeErrors;
+
+        const progress = Math.min(
+          100,
+          Math.round((typed.length / phrase.length) * 100),
+        );
+        document.getElementById("progress").style.width = progress + "%";
+
+        renderPhrase();
+
+        if (typed === phrase) {
+          finishTyping(typed, correct, cumulativeErrors);
+        }
+      }
+
+      function updateTimer() {
+        if (!timerStart) return;
+        const elapsed = (Date.now() - timerStart) / 1000;
+        document.getElementById("stat-time").textContent =
+          elapsed.toFixed(1) + "s";
+        const typed = document.getElementById("type-input").value;
+        const words = typed.trim().split(/\s+/).filter(Boolean).length;
+        const wpm = elapsed > 0 ? Math.round(words / (elapsed / 60)) : 0;
+        document.getElementById("stat-wpm").textContent = wpm;
+      }
+
+      function finishTyping(typed, correct, errors) {
+        clearInterval(timerInterval);
+        const elapsed = timerStart ? (Date.now() - timerStart) / 1000 : 0;
+        const words = PHRASES[currentPhraseIdx].text.trim().split(/\s+/).length;
+        const wpm = elapsed > 0 ? Math.round(words / (elapsed / 60)) : 0;
+        const acc =
+          typed.length > 0 ? Math.round((correct / typed.length) * 100) : 100;
+
+        finalStats = {
+          wpm,
+          acc,
+          time: elapsed.toFixed(1),
+          errors,
+          phraseIdx: currentPhraseIdx,
+        };
+        completed = true;
+
+        document.getElementById("type-input").disabled = true;
+
+        const fl = document.getElementById("flash");
+        fl.classList.add("flash");
+        setTimeout(() => fl.classList.remove("flash"), 300);
+
+        const btn = document.getElementById("btn-commit");
+        btn.textContent = "✓ git commit →";
+        btn.style.animation = "pulse 1s ease-in-out infinite";
+
+        showToast('✓ ¡Completado! Dale click a "git commit →" para continuar');
+      }
+
+      function goCommit() {
+        if (!finalStats.wpm) {
+          const typed = document.getElementById("type-input").value;
+          const phrase = PHRASES[currentPhraseIdx].text;
+          const elapsed = timerStart ? (Date.now() - timerStart) / 1000 : 1;
+          const words = typed.trim().split(/\s+/).filter(Boolean).length;
+          const wpm = Math.round(words / (elapsed / 60)) || 0;
+          let correct = 0,
+            errors = 0;
+          for (let i = 0; i < typed.length; i++) {
+            if (i < phrase.length) {
+              if (typed[i] === phrase[i]) correct++;
+              else errors++;
+            }
+          }
+          const acc =
+            typed.length > 0 ? Math.round((correct / typed.length) * 100) : 0;
+          finalStats = {
+            wpm,
+            acc,
+            time: elapsed.toFixed(1),
+            errors,
+            phraseIdx: currentPhraseIdx,
+          };
+        }
+
+        const p = PHRASES[finalStats.phraseIdx || currentPhraseIdx];
+        finalStats.sha = "???????";
+        finalStats.phrase = p.text;
+
+        document.getElementById("sp-wpm").textContent = finalStats.wpm;
+        document.getElementById("sp-acc").textContent = finalStats.acc + "%";
+        document.getElementById("sp-time").textContent = finalStats.time + "s";
+        document.getElementById("sp-phrase").textContent = p.cat;
+
+        const msgPreview = `[score] WPM: ${finalStats.wpm} | ACC: ${finalStats.acc}% | "${p.text.substring(0, 30)}..."`;
+
+        document.getElementById("commit-output").innerHTML = `
+    <div class="co-line"><span class="g">$</span> git add leaderboard.json</div>
+    <div class="co-line"><span class="g">$</span> git commit -m <span class="b">"${msgPreview}"</span></div>
+    <div class="co-line" style="margin-top:8px;" id="co-sha-line">[<span class="g">main</span> <span class="p">???????</span>] <span class="w">${msgPreview}</span></div>
+    <div class="co-line">1 file changed, 1 insertion(+)</div>
+    <div class="co-line" style="margin-top:4px;"><span class="g">$</span> git push origin main</div>
+    <div class="co-line"><span class="y">Enumerating objects:</span> 3, done.</div>
+    <div class="co-line"><span class="y">Writing objects:</span> 100% (1/1), pushing...</div>
+  `;
+
+        showScreen("s-commit");
+        document.getElementById("name-input").value = "";
+        setTimeout(() => document.getElementById("name-input").focus(), 100);
+      }
+
+      async function doPush() {
+        const raw = document.getElementById("name-input").value.trim();
+        const name = raw || "anon_" + Math.floor(Math.random() * 999);
+
+        const btn = document.querySelector(".btn-push");
+        btn.disabled = true;
+        btn.textContent = "pushing...";
+
+        const p = PHRASES[finalStats.phraseIdx];
+        const commitMsg = `[score] @${name} — WPM: ${finalStats.wpm} | ACC: ${finalStats.acc}% | Errores: ${finalStats.errors} | "${p.text.substring(0, 40)}..."`;
+
+        const entry = {
+          name,
+          wpm: finalStats.wpm,
+          acc: finalStats.acc,
+          time: finalStats.time,
+          errors: finalStats.errors,
+          phrase: finalStats.phrase,
+          isNew: true,
+          isMe: true,
+        };
+
+        try {
+          const realSHA = await pushToGitHub(entry, commitMsg);
+          entry.sha = realSHA;
+          finalStats.sha = realSHA;
+
+          // Actualizar commit-output con el SHA real
+          document.querySelector(
+            "#commit-output .co-line:nth-child(3)",
+          ).innerHTML =
+            `[<span class="g">main</span> <span class="p">${realSHA}</span>] <span class="w">${commitMsg}</span>`;
+
+          myEntryIdx = leaderboard.findIndex((e) => e.sha === realSHA);
+          // Marcar la entrada local para UI
+          const localEntry = leaderboard.find((e) => e.sha === realSHA);
+          if (localEntry) {
+            localEntry.isNew = true;
+            localEntry.isMe = true;
+          }
+
+          renderLeaderboard();
+          updateIntroStats();
+          showScreen("s-board");
+          showToast(
+            `✓ Commit ${realSHA} pushed a GitHub · ¡Bienvenido al board, ${name}!`,
+          );
+        } catch (e) {
+          console.error(e);
+          showToast("✗ Error al hacer push: " + e.message);
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "git push ↗";
+        }
+      }
+
+      function renderLeaderboard() {
+        const rankIcons = ["🥇", "🥈", "🥉"];
+        const body = document.getElementById("lb-body");
+        body.innerHTML = "";
+        leaderboard.forEach((e, i) => {
+          let rankHtml;
+          if (i === 0) rankHtml = `<span class="rank-gold">🥇</span>`;
+          else if (i === 1) rankHtml = `<span class="rank-silver">🥈</span>`;
+          else if (i === 2) rankHtml = `<span class="rank-bronze">🥉</span>`;
+          else if (e.isMe) rankHtml = `<span class="rank-me">★</span>`;
+          else
+            rankHtml = `<span style="color:var(--muted);font-size:12px;">${i + 1}</span>`;
+
+          const meBadge = e.isMe ? `<span class="me-badge">tú</span>` : "";
+          const newBadge = e.isNew
+            ? `<span class="new-badge">nuevo</span>`
+            : "";
+          e.isNew = false;
+
+          const phraseShort =
+            e.phrase.length > 35 ? e.phrase.substring(0, 35) + "…" : e.phrase;
+          const tr = document.createElement("tr");
+          if (e.isMe) tr.classList.add("me");
+          tr.style.animationDelay = i * 0.05 + "s";
+          tr.innerHTML = `
+      <td class="rank-cell">${rankHtml}</td>
+      <td class="name-cell"><span class="handle">@${e.name}</span>${meBadge}${newBadge}</td>
+      <td class="phrase-cell">${phraseShort}</td>
+      <td class="wpm-cell">${e.wpm}</td>
+      <td class="acc-cell">${e.acc}%</td>
+      <td class="time-cell">${e.time}s</td>
+      <td class="sha-cell">${e.sha}</td>
+    `;
+          body.appendChild(tr);
+        });
+        document.getElementById("board-count").textContent = leaderboard.length;
+        document.getElementById("board-time").textContent =
+          "actualizado hace " +
+          new Date().toLocaleTimeString("es-EC", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+      }
+
+      function updateIntroStats() {
+        document.getElementById("intro-count").textContent = leaderboard.length;
+        const best =
+          leaderboard.length > 0
+            ? Math.max(...leaderboard.map((e) => e.wpm))
+            : "—";
+        document.getElementById("intro-best").textContent =
+          best !== "—" ? best + " WPM" : "—";
+      }
+
+      // Cargar leaderboard desde GitHub al iniciar
+      window.addEventListener("DOMContentLoaded", async () => {
+        showToast("⟳ Cargando leaderboard desde GitHub...");
+        await loadLeaderboard();
+        renderLeaderboard();
+        showToast(
+          "✓ Leaderboard cargado · " + leaderboard.length + " participantes",
+        );
+      });
+
+      async function refreshBoard() {
+        showToast("⟳ Sincronizando con GitHub...");
+        await loadLeaderboard();
+        renderLeaderboard();
+        showToast("✓ Leaderboard actualizado");
+      }
+
+      let toastTimer;
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.classList.add("show");
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.classList.remove("show"), 2800);
+      }
+    </script>
+  </body>
+</html>
