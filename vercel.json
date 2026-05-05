@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/api/github", "destination": "/api/github.js" }]
+  "rewrites": [
+    { "source": "/", "destination": "/leaderboard.html" },
+    { "source": "/api/github", "destination": "/api/github.js" }
+  ]
 }
