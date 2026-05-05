@@ -8,11 +8,19 @@
     "phrase": "Dobby no tiene amo, Dobby es un elfo libre, y Dobby ha venido a salvar a Harry Potter y sus amigos."
   },
   {
+    "name": "Martin",
+    "wpm": 43,
+    "acc": 100,
+    "time": "29.2",
+    "errors": 4,
+    "phrase": "Dobby no tiene amo, Dobby es un elfo libre, y Dobby ha venido a salvar a Harry Potter y sus amigos."
+  },
+  {
     "name": "NarutoUzumaki",
     "wpm": 39,
     "acc": 100,
     "time": "23.1",
     "errors": 16,
-    "phrase": "Yo jamás me rindo, y jamás retrocedo a mi palabra. ¡Ese es mi camino ninja!"
+    "phrase": "Yo jamÃ¡s me rindo, y jamÃ¡s retrocedo a mi palabra. Â¡Ese es mi camino ninja!"
   }
 ]
