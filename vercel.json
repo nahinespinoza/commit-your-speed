@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/github.js": {
+      "runtime": "@vercel/node"
+    }
+  },
   "rewrites": [
     { "source": "/", "destination": "/leaderboard.html" },
     { "source": "/api/github", "destination": "/api/github.js" }
