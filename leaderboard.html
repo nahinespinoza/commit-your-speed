@@ -1149,9 +1149,7 @@
 
       async function loadLeaderboard() {
         try {
-          const res = await ghFetch(
-            GH_API + `?ref=${GH_BRANCH}&t=${Date.now()}`,
-          );
+          const res = await ghFetch(GH_API + `?t=${Date.now()}`);
           if (!res.ok) throw new Error("No se pudo leer leaderboard.json");
           const data = await res.json();
           ghFileSHA = data.sha;
@@ -1167,9 +1165,7 @@
 
       async function pushToGitHub(entry, commitMsg) {
         try {
-          const res = await ghFetch(
-            GH_API + `?ref=${GH_BRANCH}&t=${Date.now()}`,
-          );
+          const res = await ghFetch(GH_API + `?t=${Date.now()}`);
           if (res.ok) {
             const data = await res.json();
             ghFileSHA = data.sha;
@@ -1194,7 +1190,6 @@
             message: commitMsg,
             content: newContent,
             sha: ghFileSHA,
-            branch: GH_BRANCH,
           }),
         });
 
