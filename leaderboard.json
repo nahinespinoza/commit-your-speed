@@ -13,7 +13,7 @@
     "acc": 100,
     "time": "27.4",
     "errors": 15,
-    "phrase": "En este mundo, la magia lo es todo, pero yo voy a superar todos los lÃ­mites con el poder de mis mÃºsculos y mi voluntad."
+    "phrase": "En este mundo, la magia lo es todo, pero yo voy a superar todos los lÃÂ­mites con el poder de mis mÃÂºsculos y mi voluntad."
   },
   {
     "name": "geovanny",
@@ -37,6 +37,14 @@
     "acc": 100,
     "time": "23.1",
     "errors": 16,
-    "phrase": "Yo jamÃÂÃÂ¡s me rindo, y jamÃÂÃÂ¡s retrocedo a mi palabra. ÃÂÃÂ¡Ese es mi camino ninja!"
+    "phrase": "Yo jamÃÂÃÂÃÂÃÂ¡s me rindo, y jamÃÂÃÂÃÂÃÂ¡s retrocedo a mi palabra. ÃÂÃÂÃÂÃÂ¡Ese es mi camino ninja!"
+  },
+  {
+    "name": "Alexa",
+    "wpm": 33,
+    "acc": 100,
+    "time": "21.9",
+    "errors": 10,
+    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendición y mi maldición."
   }
 ]
