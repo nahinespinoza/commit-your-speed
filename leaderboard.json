@@ -13,7 +13,7 @@
     "acc": 100,
     "time": "27.4",
     "errors": 15,
-    "phrase": "En este mundo, la magia lo es todo, pero yo voy a superar todos los lÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ­mites con el poder de mis mÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºsculos y mi voluntad."
+    "phrase": "En este mundo, la magia lo es todo, pero yo voy a superar todos los lÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ­mites con el poder de mis mÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂºsculos y mi voluntad."
   },
   {
     "name": "geovanny",
@@ -37,7 +37,7 @@
     "acc": 100,
     "time": "23.1",
     "errors": 16,
-    "phrase": "Yo jamÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¡s me rindo, y jamÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¡s retrocedo a mi palabra. ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¡Ese es mi camino ninja!"
+    "phrase": "Yo jamÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¡s me rindo, y jamÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¡s retrocedo a mi palabra. ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¡Ese es mi camino ninja!"
   },
   {
     "name": "Yarss",
@@ -45,7 +45,7 @@
     "acc": 99,
     "time": "20.9",
     "errors": 1,
-    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendiciÃ³n y mi maldiciÃ³n."
+    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendiciÃÂ³n y mi maldiciÃÂ³n."
   },
   {
     "name": "Alexa",
@@ -53,7 +53,15 @@
     "acc": 100,
     "time": "21.9",
     "errors": 10,
-    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendiciÃÂÃÂ³n y mi maldiciÃÂÃÂ³n."
+    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendiciÃÂÃÂÃÂÃÂ³n y mi maldiciÃÂÃÂÃÂÃÂ³n."
+  },
+  {
+    "name": "CHristian Martinez(?",
+    "wpm": 29,
+    "acc": 10,
+    "time": "24.7",
+    "errors": 79,
+    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendición y mi maldición."
   },
   {
     "name": "Aldo Auria",
@@ -61,7 +69,7 @@
     "acc": 24,
     "time": "29.2",
     "errors": 67,
-    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendición y mi maldición."
+    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendiciÃ³n y mi maldiciÃ³n."
   },
   {
     "name": "gazuacos",
@@ -69,6 +77,6 @@
     "acc": 100,
     "time": "16.6",
     "errors": 0,
-    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendiciÃÂ³n y mi maldiciÃÂ³n."
+    "phrase": "Grandes poderes conllevan grandes responsabilidades. Esa es mi bendiciÃÂÃÂ³n y mi maldiciÃÂÃÂ³n."
   }
 ]
