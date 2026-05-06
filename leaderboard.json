@@ -8,6 +8,14 @@
     "phrase": "Dobby no tiene amo, Dobby es un elfo libre, y Dobby ha venido a salvar a Harry Potter y sus amigos."
   },
   {
+    "name": "Rey Mago Asta",
+    "wpm": 55,
+    "acc": 100,
+    "time": "27.4",
+    "errors": 15,
+    "phrase": "En este mundo, la magia lo es todo, pero yo voy a superar todos los límites con el poder de mis músculos y mi voluntad."
+  },
+  {
     "name": "Martin",
     "wpm": 43,
     "acc": 100,
@@ -21,6 +29,6 @@
     "acc": 100,
     "time": "23.1",
     "errors": 16,
-    "phrase": "Yo jamÃ¡s me rindo, y jamÃ¡s retrocedo a mi palabra. Â¡Ese es mi camino ninja!"
+    "phrase": "Yo jamÃÂ¡s me rindo, y jamÃÂ¡s retrocedo a mi palabra. ÃÂ¡Ese es mi camino ninja!"
   }
 ]
