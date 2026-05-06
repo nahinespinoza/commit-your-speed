@@ -1102,16 +1102,6 @@
           source: "Asta (Black Clover)",
           cat: "anime",
         },
-        {
-          text: "Reachin' out on my way home, you can be so cold, I'll try again. You make me sad and second-guess myself, Midwest Indigo.",
-          source: "Twenty One Pilots (Midwest Indigo)",
-          cat: "music",
-        },
-        {
-          text: "I don't care what's in your hair, I just wanna know what's on your mind. I used to say I wanna die before I'm old, but because of you I might think twice.",
-          source: "Twenty One Pilots (WDBWOTV)",
-          cat: "music",
-        },
       ];
 
       // ── GitHub config (proxy via Vercel) ───────────────────
@@ -1153,7 +1143,9 @@
           if (!res.ok) throw new Error("No se pudo leer leaderboard.json");
           const data = await res.json();
           ghFileSHA = data.sha;
-          const content = JSON.parse(atob(data.content.replace(/\n/g, "")));
+          const content = JSON.parse(
+            decodeURIComponent(escape(atob(data.content.replace(/\n/g, "")))),
+          );
           leaderboard = Array.isArray(content) ? content : [];
         } catch (e) {
           console.warn("loadLeaderboard error:", e);
