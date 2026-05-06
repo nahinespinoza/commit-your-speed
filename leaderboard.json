@@ -13,7 +13,15 @@
     "acc": 100,
     "time": "27.4",
     "errors": 15,
-    "phrase": "En este mundo, la magia lo es todo, pero yo voy a superar todos los límites con el poder de mis músculos y mi voluntad."
+    "phrase": "En este mundo, la magia lo es todo, pero yo voy a superar todos los lÃ­mites con el poder de mis mÃºsculos y mi voluntad."
+  },
+  {
+    "name": "geovanny",
+    "wpm": 54,
+    "acc": 97,
+    "time": "23.3",
+    "errors": 3,
+    "phrase": "Dobby no tiene amo, Dobby es un elfo libre, y Dobby ha venido a salvar a Harry Potter y sus amigos."
   },
   {
     "name": "Martin",
@@ -29,6 +37,6 @@
     "acc": 100,
     "time": "23.1",
     "errors": 16,
-    "phrase": "Yo jamÃÂ¡s me rindo, y jamÃÂ¡s retrocedo a mi palabra. ÃÂ¡Ese es mi camino ninja!"
+    "phrase": "Yo jamÃÂÃÂ¡s me rindo, y jamÃÂÃÂ¡s retrocedo a mi palabra. ÃÂÃÂ¡Ese es mi camino ninja!"
   }
 ]
